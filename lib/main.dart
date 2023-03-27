@@ -4,8 +4,58 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyApp extends StatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  int _selectedIndex = -1;
+  final List<String> _categories = ['女裝', '男裝', '配件'];
+  final List<List<String>> _items = [
+    [
+      'Item 1',
+      'Item 2',
+      'Item 3',
+      'Item 4',
+      'Item 5',
+      'Item 6',
+      'Item 7',
+      'Item 8',
+      'Item 9',
+      'Item 10'
+    ],
+    [
+      'Item 1',
+      'Item 2',
+      'Item 3',
+      'Item 4',
+      'Item 5',
+      'Item 6',
+      'Item 7',
+      'Item 8',
+      'Item 9',
+      'Item 10',
+      'Item 11',
+      'Item 12'
+    ],
+    [
+      'Item 1',
+      'Item 2',
+      'Item 3',
+      'Item 4',
+      'Item 5',
+      'Item 6',
+      'Item 7',
+      'Item 8',
+      'Item 9',
+      'Item 10'
+    ],
+  ];
+
+  final List<bool> _itemsExpansionPanel = [false, false, false];
 
   @override
   Widget build(BuildContext context) {
@@ -13,65 +63,118 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'My App',
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('My App'),
-        ),
         body: Column(
           children: [
-            Expanded(
-              child: SafeArea(
-                child: SizedBox(
-                  height: 100.0,
-                  child: PageView.builder(
-                    itemCount: 3,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: Image.asset(
-                            'images/${index + 1}.jpeg',
-                            fit: BoxFit.cover,
-                            height: 100.0,
+            SizedBox(
+              height: 360.0,
+              child: PageView.builder(
+                itemCount: 3,
+                itemBuilder: (BuildContext context, int index) {
+                  return Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8.0),
+                      child: Image.asset(
+                        'images/${index + 1}.jpeg',
+                        fit: BoxFit.cover,
+                        height: 100.0,
+                      ),
+                    ),
+                  );
+                },
+                pageSnapping: true,
+                scrollDirection: Axis.horizontal,
+                controller:
+                PageController(initialPage: 1, viewportFraction: 0.3),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                for (int i = 0; i < _categories.length; i++)
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _selectedIndex = i;
+                        _itemsExpansionPanel.fillRange(
+                            0, _itemsExpansionPanel.length, false);
+                        _itemsExpansionPanel[0] = i == 0;
+                      });
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(16.0),
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: i == _selectedIndex
+                                ? Colors.black
+                                : Colors.transparent,
+                            width: 2.0,
                           ),
                         ),
-                      );
-                    },
-                    pageSnapping: true,
-                    scrollDirection: Axis.horizontal,
-                    controller: PageController(viewportFraction: 0.8),
+                      ),
+                      child: Text(
+                        _categories[i],
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                          color:
+                          i == _selectedIndex ? Colors.black : Colors.grey,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            if (_selectedIndex >= 0)
+              Expanded(
+                child: Container(
+                  width: double.infinity,
+                  child: SingleChildScrollView(
+                    child: ExpansionPanelList(
+                        expansionCallback: (int index, bool isExpanded) {
+                          setState(() {
+                            _itemsExpansionPanel[index] = !isExpanded;
+                          });
+                        },
+                        children: [
+                          ExpansionPanel(
+                            isExpanded: _itemsExpansionPanel[0],
+                            headerBuilder:
+                                (BuildContext context, bool isExpanded) {
+                              return Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Text(
+                                  _categories[_selectedIndex],
+                                  style: TextStyle(
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              );
+                            },
+                            body: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0),
+                              child: Column(
+                                children: [
+                                  for (int i = 0; i < _items[_selectedIndex].length; i++)
+                                    ListTile(
+                                      title: Text(_items[_selectedIndex][i]),
+                                    )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ]),
                   ),
                 ),
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.black,
-                    width: 2.0,
-                  ),
-                ),
-                child: ListView.builder(
-                  itemCount: 10,
-                  itemBuilder: (BuildContext context, int index) {
-                    return ListTile(
-                      title: Text('Item ${index + 1}'),
-                    );
-                  },
-                ),
-              ),
-            ),
+              )
           ],
         ),
       ),
     );
-  }
-}
-
-
-
+  }}
 
 
 class MyHomePage extends StatefulWidget {
@@ -145,7 +248,10 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Text(
               '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+              style: Theme
+                  .of(context)
+                  .textTheme
+                  .headlineMedium,
             ),
           ],
         ),
