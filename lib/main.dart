@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_stylish/HomePage/VerticalCategories.dart';
+
+import 'HomePage/HorizontalCategories.dart';
 
 void main() {
   runApp(const MyApp());
@@ -8,69 +11,38 @@ class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  _MyAppState createState() => _MyAppState();
+  _StylishApp createState() => _StylishApp();
+
+
 }
 
-int _selectedIndex = -1;
+
 final List<String> _categories = ['女裝', '男裝', '配件'];
-final List<List<String>> _items = [
-  [
-    'Item 1',
-    'Item 2',
-    'Item 3',
-    'Item 4',
-    'Item 5',
-    'Item 6',
-    'Item 7',
-    'Item 8',
-    'Item 9',
-    'Item 10'
-  ],
-  [
-    'Item 1',
-    'Item 2',
-    'Item 3',
-    'Item 4',
-    'Item 5',
-    'Item 6',
-    'Item 7',
-    'Item 8',
-    'Item 9',
-    'Item 10',
-    'Item 11',
-    'Item 12'
-  ],
-  [
-    'Item 1',
-    'Item 2',
-    'Item 3',
-    'Item 4',
-    'Item 5',
-    'Item 6',
-    'Item 7',
-    'Item 8',
-    'Item 9',
-    'Item 10'
-  ],
-];
 
 final List<bool> _itemsExpansionPanel = [false, false, false];
 
-class _MyAppState extends State<MyApp> {
+class _StylishApp extends State<MyApp> {
+
+  int _selectedIndex = -1;
+
   @override
   Widget build(BuildContext context) {
     final double appBarHeight = AppBar().preferredSize.height;
     return MaterialApp(
-      title: 'My App',
       home: Scaffold(
+        appBar: AppBar(
+          title: const StylishAppBar(),
+          backgroundColor: Colors.grey[200],
+        ),
+
         body: Column(
           children: [
             const PictureOnTop(),
             LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
                 return (constraints.maxWidth < 600)
-                    ? _buildVerticalCategories() // 如果螢幕寬度小於 600，則使用垂直列表
-                    : _buildHorizontalCategories(); // 否則使用水平列表
+                    ? VerticalCategories(categories: _categories,selectedIndex:_selectedIndex) // 如果螢幕寬度小於 600，則使用垂直列表
+                    : HorizontalCategories(categories: _categories,selectedIndex:_selectedIndex); // 否則使用水平列表
               },
             )
           ],
@@ -78,76 +50,40 @@ class _MyAppState extends State<MyApp> {
       ),
     );
   }
+}
 
-  void _selectCategory(int index) {
-    setState(() {
-      _selectedIndex = index;
-      _itemsExpansionPanel.fillRange(0, _itemsExpansionPanel.length, false);
-      _itemsExpansionPanel[0] = index == 0;
-    });
-  }
+class StylishAppBar extends StatelessWidget {
+  const StylishAppBar({
+    super.key,
+  });
 
-  Widget _buildVerticalCategories() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: List.generate(
-        _categories.length,
-        (i) => GestureDetector(
-          onTap: () => _selectCategory(i),
-          child: _buildCategoryItem(i),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHorizontalCategories() {
+  @override
+  Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: List.generate(
-        _categories.length,
-        (i) => GestureDetector(
-          onTap: () => _selectCategory(i),
-          child: _buildCategoryItem(i),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCategoryItem(int index) {
-    final bool isSelected = index == _selectedIndex;
-
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: isSelected ? Colors.black : Colors.transparent,
-            width: 2.0,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SizedBox(
+          width: 120.0, // 设置图像的宽度
+          child: Image.asset(
+            'images/stylish_Logo.png',
+            fit: BoxFit.fitWidth,
           ),
         ),
-      ),
-      child: Text(
-        _categories[index],
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: 18.0,
-          fontWeight: FontWeight.bold,
-          color: isSelected ? Colors.black : Colors.grey,
-        ),
-      ),
+      ],
     );
   }
 }
 
 class PictureOnTop extends StatelessWidget {
   const PictureOnTop({
-    super.key,
-  });
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 360.0,
+      height: MediaQuery.of(context).size.height * 0.4,
       child: PageView.builder(
         itemCount: 3,
         itemBuilder: (BuildContext context, int index) {
@@ -170,3 +106,4 @@ class PictureOnTop extends StatelessWidget {
     );
   }
 }
+
