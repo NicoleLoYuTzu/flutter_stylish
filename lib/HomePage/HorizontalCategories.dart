@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_stylish/HomePage/product_list_item.dart';
+import 'package:flutter_stylish/HomePage/CardStyle.dart';
 
 import '../model/product.dart';
 
@@ -9,7 +9,7 @@ class HorizontalCategories extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return Flexible(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -32,7 +32,7 @@ class HorizontalCategories extends StatelessWidget {
   });
 
   Widget _buildCategoryItem(String category) {
-    return Expanded(
+    return Flexible(
       child: Column(
         children: [
           Text(
@@ -41,7 +41,7 @@ class HorizontalCategories extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          Expanded(
+          Flexible(
             child: ListView.builder(
               physics: const AlwaysScrollableScrollPhysics(
                 parent: BouncingScrollPhysics(),
@@ -49,7 +49,7 @@ class HorizontalCategories extends StatelessWidget {
               shrinkWrap: true,
               itemCount: listItems.length,
               itemBuilder: (context, index) {
-                return ProductListItem(item: listItems[index]);
+                return CardStyle(item: listItems[index]);
               },
             ),
           ),

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import '../model/product.dart';
 
-class ProductListItem extends StatelessWidget {
+class CardStyle extends StatelessWidget {
   final ProductList item;
 
-  const ProductListItem({super.key, required this.item});
+  const CardStyle({super.key, required this.item});
 
   @override
   Widget build(BuildContext context) {

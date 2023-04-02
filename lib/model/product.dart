@@ -27,3 +27,9 @@ class ProductList {
         required this.productName,
         required this.price});
 }
+
+class ImageList {
+  final Image image;
+
+  ImageList({required this.image});
+}

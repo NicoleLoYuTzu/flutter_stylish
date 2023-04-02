@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_stylish/HomePage/product_list_item.dart';
+import 'package:flutter_stylish/HomePage/CardStyle.dart';
 
 import '../model/product.dart';
 
@@ -15,7 +15,7 @@ class _VerticalCategoriesState extends State<VerticalCategories> {
     return ProductList(
         productStyle: '女裝',
         image: const AssetImage(
-          'assets/images/flowers_2.png',
+          'images/2.jpeg',
         ),
         productName: 'UNIQLO 特級輕羽絨',
         price: 323);
@@ -55,7 +55,7 @@ class _VerticalCategoriesState extends State<VerticalCategories> {
             shrinkWrap: true,
             itemCount: listItems.length,
             itemBuilder: (context, index) {
-              return ProductListItem(item: listItems[index]);
+              return CardStyle(item: listItems[index]);
             },
           ),
         ),
