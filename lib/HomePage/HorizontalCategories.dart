@@ -1,66 +1,61 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_stylish/HomePage/product_list_item.dart';
 
 import '../model/product.dart';
 
-class HorizontalCategories extends StatefulWidget {
-  final List<String> categories;
-  late final int selectedIndex;
+class HorizontalCategories extends StatelessWidget {
+  HorizontalCategories({Key? key}) : super(key: key);
 
-  HorizontalCategories({
-    Key? key,
-    required this.categories,
-    required this.selectedIndex,
-  }) : super(key: key);
-
-  @override
-  _HorizontalCategories createState() => _HorizontalCategories();
-}
-
-class _HorizontalCategories extends State<HorizontalCategories> {
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: List.generate(
-        widget.categories.length,
-        (i) => GestureDetector(
-          onTap: () => _selectCategory(i),
-          child: _buildCategoryItem(i),
-        ),
+    return Expanded(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          _buildCategoryItem('女裝'),
+          _buildCategoryItem('男裝'),
+          _buildCategoryItem('配件'),
+        ],
       ),
     );
   }
 
-  void _selectCategory(int index) {
-    setState(() {
-      widget.selectedIndex = index;
-    });
-  }
-
-  final List<Product> listItems = List<Product>.generate(50, (index) {
-    return Product(
-        title: "123", image: const AssetImage('images/dog.png'), price: 15);
+  final List<ProductList> listItems = List<ProductList>.generate(15, (index) {
+    return ProductList(
+        productStyle: '女裝',
+        image: const AssetImage(
+          'images/dog.png',
+        ),
+        productName: 'UNIQLO 特級輕羽絨',
+        price: 323);
   });
 
-  Widget _buildCategoryItem(int index) {
-    final bool isSelected = index == widget.selectedIndex;
-
-    return GestureDetector(
-      onTap: () => _selectCategory(index),
-      child: Expanded(
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 12.0),
-              child: Text(
-                widget.categories[index],
-                textAlign: TextAlign.center,
-              ),
+  Widget _buildCategoryItem(String category) {
+    return Expanded(
+      child: Column(
+        children: [
+          Text(
+            category,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
             ),
-          ],
-        ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              physics: const AlwaysScrollableScrollPhysics(
+                parent: BouncingScrollPhysics(),
+              ),
+              shrinkWrap: true,
+              itemCount: listItems.length,
+              itemBuilder: (context, index) {
+                return ProductListItem(item: listItems[index]);
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
 }
+

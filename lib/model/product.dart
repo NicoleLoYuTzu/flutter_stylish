@@ -14,3 +14,16 @@ class ProductCategory {
 
   ProductCategory({required this.category, required this.products});
 }
+
+class ProductList {
+  final String productStyle;
+  final AssetImage image;
+  final String productName;
+  final int price;
+
+  ProductList(
+      {required this.productStyle,
+        required this.image,
+        required this.productName,
+        required this.price});
+}

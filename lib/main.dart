@@ -7,45 +7,25 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  _StylishApp createState() => _StylishApp();
-
-
-}
-
-
-final List<String> _categories = ['女裝', '男裝', '配件'];
-
-final List<bool> _itemsExpansionPanel = [false, false, false];
-
-class _StylishApp extends State<MyApp> {
-
-  int _selectedIndex = -1;
-
-  @override
   Widget build(BuildContext context) {
-    final double appBarHeight = AppBar().preferredSize.height;
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
           title: const StylishAppBar(),
           backgroundColor: Colors.grey[200],
         ),
-
-        body: Column(
-          children: [
-            const PictureOnTop(),
-            LayoutBuilder(
-              builder: (BuildContext context, BoxConstraints constraints) {
-                return (constraints.maxWidth < 600)
-                    ? VerticalCategories(categories: _categories,selectedIndex:_selectedIndex) // 如果螢幕寬度小於 600，則使用垂直列表
-                    : HorizontalCategories(categories: _categories,selectedIndex:_selectedIndex); // 否則使用水平列表
-              },
-            )
-          ],
+        body: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            if (constraints.maxWidth < 600) {
+              return const VerticalCategories();
+            } else {
+              return HorizontalCategories();
+            }
+          },
         ),
       ),
     );
@@ -106,4 +86,3 @@ class PictureOnTop extends StatelessWidget {
     );
   }
 }
-
