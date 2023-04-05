@@ -1,7 +1,10 @@
+import 'dart:html';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_stylish/HomePage/CardStyle.dart';
 
+import '../DetailPage/DetailPage.dart';
 import '../model/product.dart';
 
 class HorizontalCategories extends StatelessWidget {
@@ -48,8 +51,16 @@ class HorizontalCategories extends StatelessWidget {
               ),
               shrinkWrap: true,
               itemCount: listItems.length,
-              itemBuilder: (context, index) {
-                return CardStyle(item: listItems[index]);
+              itemBuilder: (BuildContext context, int index) {
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => DetailPage()),
+                    );
+                  },
+                  child: CardStyle(item: listItems[index]),
+                );
               },
             ),
           ),
@@ -58,4 +69,5 @@ class HorizontalCategories extends StatelessWidget {
     );
   }
 }
+
 

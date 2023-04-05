@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import '../model/product.dart';
 
+
+
 class CardStyle extends StatelessWidget {
+
+
   final ProductList item;
 
   const CardStyle({super.key, required this.item});
