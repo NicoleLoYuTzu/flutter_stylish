@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_stylish/model/product.dart';
 
 import 'HorizontalCategories.dart';
 import 'OnTopPicture.dart';
@@ -6,7 +7,7 @@ import 'VerticalCategories.dart';
 
 class HomePage extends StatelessWidget{
 
-  const HomePage({super.key});
+  const HomePage({super.key, required List<ProductList> productLists});
 
   @override
   Widget build(BuildContext context) {

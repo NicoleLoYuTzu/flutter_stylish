@@ -17,7 +17,7 @@ class ProductCategory {
 
 class ProductList {
   final String productStyle;
-  final AssetImage image;
+  final ImageProvider<Object> image;
   final String productName;
   final int price;
 
