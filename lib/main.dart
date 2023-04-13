@@ -42,12 +42,12 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    _fetchData();
+    _fetchHotData();
   }
 
-  Future<void> _fetchData() async {
+  Future<void> _fetchHotData() async {
     try {
-      final products = await fetchProductList();
+      final products = await fetchHotProductList();
       setState(() {
         _productLists = products;
       });
@@ -59,7 +59,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    print('_productLists : ${_productLists}');
     print('_productLists length: ${_productLists.length}');
 
 
@@ -69,7 +68,7 @@ class _MyAppState extends State<MyApp> {
           title: const StylishAppBar(),
           backgroundColor: Colors.grey[200],
         ),
-        body: HomePage(productLists: _productLists),
+        body: HomePage(_productLists),
       ),
     );
   }

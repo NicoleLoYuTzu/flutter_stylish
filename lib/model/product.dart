@@ -17,13 +17,13 @@ class ProductCategory {
 
 class ProductList {
   final String productStyle;
-  final ImageProvider<Object> image;
+  final NetworkImage image;
   final String productName;
   final int price;
 
   ProductList(
       {required this.productStyle,
-        required this.image,
+        this.image = const NetworkImage('https://via.placeholder.com/150'),
         required this.productName,
         required this.price});
 }

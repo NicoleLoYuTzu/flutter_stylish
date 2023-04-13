@@ -5,20 +5,25 @@ import 'HorizontalCategories.dart';
 import 'OnTopPicture.dart';
 import 'VerticalCategories.dart';
 
-class HomePage extends StatelessWidget{
+class HomePage extends StatefulWidget{
+  final List<ProductList> productLists;
 
-  const HomePage({super.key, required List<ProductList> productLists});
+  HomePage(this.productLists, {Key? key}) : super(key: key);
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        OnTopPicture(),
+        OnTopPicture(widget.productLists),
         const HomePageProductList(),
       ],
     );
   }
-
 }
 
 class HomePageProductList extends StatelessWidget {

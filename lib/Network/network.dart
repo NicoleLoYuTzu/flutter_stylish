@@ -4,7 +4,7 @@ import 'dart:convert';
 
 import '../model/product.dart';
 
-Future<List<ProductList>> fetchProductList() async {
+Future<List<ProductList>> fetchHotProductList() async {
   const String hostName = 'api.appworks-school.tw';
   const String apiVersion = '1.0';
   const String endpoint = '/marketing/hots';

@@ -14,9 +14,6 @@ class _VerticalCategoriesState extends State<VerticalCategories> {
   final List<ProductList> listItems = List<ProductList>.generate(15, (index) {
     return ProductList(
         productStyle: '女裝',
-        image: const AssetImage(
-          'images/2.jpeg',
-        ),
         productName: 'UNIQLO 特級輕羽絨',
         price: 323);
   });

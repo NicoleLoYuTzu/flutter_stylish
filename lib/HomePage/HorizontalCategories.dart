@@ -25,9 +25,6 @@ class HorizontalCategories extends StatelessWidget {
   final List<ProductList> listItems = List<ProductList>.generate(15, (index) {
     return ProductList(
         productStyle: '女裝',
-        image: const AssetImage(
-          'images/dog.png',
-        ),
         productName: 'UNIQLO 特級輕羽絨',
         price: 323);
   });
