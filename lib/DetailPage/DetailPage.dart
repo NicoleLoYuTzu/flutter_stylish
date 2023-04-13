@@ -1,149 +1,152 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class DetailPage extends StatelessWidget {
+import '../main.dart';
 
+class DetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
     double screenWidth = MediaQuery.of(context).size.width;
     const double minScreenWidth = 800.0; // 設定最小寬度值
 
     final isPhoneSize = screenWidth < minScreenWidth;
 
-
     return Scaffold(
+        appBar: AppBar(
+          title: const StylishAppBar(),
+          backgroundColor: Colors.grey[200],
+        ),
         body: SingleChildScrollView(
-      child: ListView(
-        physics: NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        children: [
-          Column(
+          child: ListView(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
             children: [
-              if (isPhoneSize)
-                Column(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(38),
-                      child: const ImageWidget(
-                        image: AssetImage('images/dog.png'),
-                        height: 350,
-                      ),
+              Column(
+                children: [
+                  if (isPhoneSize)
+                    Column(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(38),
+                          child: const ImageWidget(
+                            image: AssetImage('images/dog.png'),
+                            height: 350,
+                          ),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: TextWithLine(
+                            topText: 'UNIQLO 特級輕羽絨',
+                            midText: '2023032101',
+                            botText: 'NT\$ 323',
+                            lineText: '---',
+                          ),
+                        ),
+                      ],
+                    )
+                  else
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            padding: EdgeInsets.only(left: 38),
+                            child: const ImageWidget(
+                              image: AssetImage('images/dog.png'),
+                              height: 350,
+                            ),
+                          ),
+                        ),
+                        const Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: TextWithLine(
+                              topText: 'UNIQLO 特級輕羽絨',
+                              midText: '2023032101',
+                              botText: 'NT\$ 323',
+                              lineText: '---',
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    const Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: TextWithLine(
-                        topText: 'UNIQLO 特級輕羽絨',
-                        midText: '2023032101',
-                        botText: 'NT\$ 323',
-                        lineText: '---',
-                      ),
-                    ),
-                  ],
-                )
-              else
-                Row(
-                  children: [
-                    Expanded(
-                      child: Container(
+                  Row(
+                    children: [
+                      Container(
                         padding: EdgeInsets.only(left: 38),
-                        child: const ImageWidget(
-                          image: AssetImage('images/dog.png'),
-                          height: 350,
+                        child: ShaderMask(
+                          shaderCallback: (Rect bounds) {
+                            return LinearGradient(
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                              colors: <Color>[
+                                Colors.blue.shade800,
+                                Colors.blue.shade400,
+                                Colors.green.shade400,
+                                Colors.green.shade100,
+                              ],
+                            ).createShader(bounds);
+                          },
+                          child: const Text(
+                            '細部說明',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                    const Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: TextWithLine(
-                          topText: 'UNIQLO 特級輕羽絨',
-                          midText: '2023032101',
-                          botText: 'NT\$ 323',
-                          lineText: '---',
+                      Expanded(
+                        child: Container(
+                          margin: EdgeInsets.all(16),
+                          height: 1,
+                          color: Colors.grey[300],
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              Row(
-                children: [
-                  Container(
-                    padding: EdgeInsets.only(left: 38),
-                    child: ShaderMask(
-                      shaderCallback: (Rect bounds) {
-                        return LinearGradient(
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
-                          colors: <Color>[
-                            Colors.blue.shade800,
-                            Colors.blue.shade400,
-                            Colors.green.shade400,
-                            Colors.green.shade100,
-                          ],
-                        ).createShader(bounds);
-                      },
-                      child: const Text(
-                        '細部說明',
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
+                    ],
                   ),
-                  Expanded(
-                    child: Container(
-                      margin: EdgeInsets.all(16),
-                      height: 1,
-                      color: Colors.grey[300],
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.only(left: 38, right: 38),
-                      child: const Text(
-                        'O.N.S is all about options, which is why we took our staple polo shirt and upgraded it with slubby linen jersey, making it even lighter for those who prefer their summer style extra-breezy.',
-                        softWrap: true,
-                        maxLines: 3,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: 4,
-                itemBuilder: (context, index) {
-                  return Row(
+                  Row(
                     children: [
                       Expanded(
                         child: Container(
-                          padding: const EdgeInsets.all(38),
-                          child: Image(
-                            image:
-                                AssetImage('images/detailpage${index + 1}.png'),
-                            height: 230,
-                            fit: BoxFit.cover,
+                          padding: const EdgeInsets.only(left: 38, right: 38),
+                          child: const Text(
+                            'O.N.S is all about options, which is why we took our staple polo shirt and upgraded it with slubby linen jersey, making it even lighter for those who prefer their summer style extra-breezy.',
+                            softWrap: true,
+                            maxLines: 3,
                           ),
                         ),
                       ),
                     ],
-                  );
-                },
-              )
+                  ),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: 4,
+                    itemBuilder: (context, index) {
+                      return Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              padding: const EdgeInsets.all(38),
+                              child: Image(
+                                image: AssetImage(
+                                    'images/detailpage${index + 1}.png'),
+                                height: 230,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  )
+                ],
+              ),
             ],
           ),
-        ],
-      ),
-    ));
+        ));
   }
 }
 
@@ -285,17 +288,22 @@ class TextWithLine extends StatelessWidget {
         children: [
           Expanded(
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              decoration: BoxDecoration(
-                color: Colors.grey[800],
-              ),
+              color: Colors.grey[800],
               height: 50,
-              child: const Center(
-                child: Text(
-                  '請調整尺寸',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: ElevatedButton(
+                  onPressed: null,
+                  child: Text(
+                    '請調整尺寸',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(horizontal: 16), // 添加邊距
+                    backgroundColor: Colors.grey[700],
                   ),
                 ),
               ),
@@ -552,7 +560,7 @@ class CustomButton extends StatelessWidget {
             ),
             child: Text(
               text,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 14.0,
                 fontWeight: FontWeight.bold,
