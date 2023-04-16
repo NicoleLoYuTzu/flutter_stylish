@@ -1,35 +1,110 @@
 import 'package:flutter/cupertino.dart';
 
-class Product {
-  final String title;
-  final AssetImage image;
-  final int price;
+// class Product {
+//   final String title;
+//   final AssetImage image;
+//   final int price;
+//
+//   Product({required this.title, required this.image, required this.price});
+// }
+//
+// class ProductCategory {
+//   final String category;
+//   final List<Product> products;
+//
+//   ProductCategory({required this.category, required this.products});
+// }
+class ProductColor {
+  final String code;
+  final String name;
 
-  Product({required this.title, required this.image, required this.price});
+  ProductColor({required this.code, required this.name});
 }
 
-class ProductCategory {
-  final String category;
-  final List<Product> products;
+class Variant {
+  final String colorCode;
+  final String size;
+  final int stock;
 
-  ProductCategory({required this.category, required this.products});
+  Variant({
+    required this.colorCode,
+    required this.size,
+    required this.stock,
+  });
+
+  factory Variant.fromJson(Map<String, dynamic> json) {
+    return Variant(
+      colorCode: json['color_code'],
+      size: json['size'],
+      stock: json['stock'],
+    );
+  }
 }
+
 
 class ProductList {
-  final String productStyle;
-  final NetworkImage image;
-  final String productName;
+  final int id;
+  final String category;
+  final String title;
+  final String description;
   final int price;
+  final String texture;
+  final String wash;
+  final String place;
+  final String note;
+  final String story;
+  final List<ProductColor> colors;
+  final List<String> sizes;
+  final List<Variant> variants;
+  final String mainImage;
+  final List<String> images;
 
-  ProductList(
-      {required this.productStyle,
-        this.image = const NetworkImage('https://via.placeholder.com/150'),
-        required this.productName,
-        required this.price});
+
+  ProductList({
+    this.id = 0,
+    this.category = '',
+    this.title = '',
+    this.description = '',
+    this.price = 0,
+    this.texture = '',
+    this.wash = '',
+    this.place = '',
+    this.note = '',
+    this.story = '',
+    this.colors = const [],
+    this.sizes = const [],
+    this.variants = const [],
+    this.mainImage = '',
+    this.images = const [],
+  });
 }
+
 
 class ImageList {
   final Image image;
 
   ImageList({required this.image});
 }
+
+// class ProductListHots {
+//   final String title;
+//   final ProductList products;
+//
+//   ProductListHots({
+//     this.title = 'Default Title',
+//     this.products = ProductList(),
+//   });
+// }
+
+class ProductListHots {
+  late final String title;
+  late final List<ProductList> products;
+
+  ProductListHots({
+    this.title = 'Default Title',
+    List<ProductList>? products,
+  }) {
+    this.products = products ?? [];
+  }
+}
+

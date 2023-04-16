@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../DetailPage/DetailPage.dart';
 import '../model/product.dart';
 
 class OnTopPicture extends StatefulWidget {
-  final List<ProductList> productLists;
+  final List<dynamic> productLists;
 
   OnTopPicture(this.productLists, {Key? key}) : super(key: key);
 
@@ -30,12 +31,21 @@ class _OnTopPictureState extends State<OnTopPicture> {
       child: PageView.builder(
         itemCount: widget.productLists.length,
         itemBuilder: (BuildContext context, int index) {
-          return Container(
+          return GestureDetector(
+              onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DetailPage(widget.productLists[index]),
+              ),
+            );
+          },
+          child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 8.0),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8.0),
               child: Image.network(
-                widget.productLists[index].image.url,
+                widget.productLists[index].images.first,
                 fit: BoxFit.cover,
                 height: 100.0,
                 errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
@@ -43,7 +53,7 @@ class _OnTopPictureState extends State<OnTopPicture> {
                 },
               ),
             ),
-          );
+          ));
         },
         pageSnapping: true,
         scrollDirection: Axis.horizontal,

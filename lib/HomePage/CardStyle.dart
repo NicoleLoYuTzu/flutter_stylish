@@ -2,11 +2,16 @@ import 'package:flutter/material.dart';
 import '../DetailPage/DetailPage.dart';
 import '../model/product.dart';
 
-class CardStyle extends StatelessWidget {
-  final ProductList item;
+class CardStyle extends StatefulWidget {
+  final ProductList productList;
 
-  const CardStyle({super.key, required this.item});
+  CardStyle(this.productList, {Key? key}) : super(key: key);
 
+  @override
+  State<CardStyle> createState() => _CardStyleState();
+}
+
+class _CardStyleState extends State<CardStyle> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -14,7 +19,7 @@ class CardStyle extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => DetailPage(),
+              builder: (context) => DetailPage(widget.productList),
             ),
           );
         },
@@ -32,31 +37,32 @@ class CardStyle extends StatelessWidget {
             ),
             child: Row(
               children: [
-                ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(8),
-                    bottomLeft: Radius.circular(8),
-                  ),
-                  child: Image(
-                    image: item.image,
-                    height: 100,
-                    width: 80,
-                    fit: BoxFit.cover,
+                Flexible(
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(8),
+                      bottomLeft: Radius.circular(8),
+                    ),
+                    child: Image(
+                      image: NetworkImage(widget.productList.images[0]),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
+
                 const SizedBox(width: 10),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      item.productName,
+                      widget.productList.title,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
-                      'NT\$ ${item.price}',
+                      'NT\$ ${widget.productList.price}',
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
@@ -64,6 +70,8 @@ class CardStyle extends StatelessWidget {
                   ],
                 )
               ],
-            )));
+            )
+        )
+    );
   }
 }

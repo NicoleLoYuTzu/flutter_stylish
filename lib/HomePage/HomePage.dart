@@ -20,24 +20,30 @@ class _HomePageState extends State<HomePage> {
     return Column(
       children: [
         OnTopPicture(widget.productLists),
-        const HomePageProductList(),
+        HomePageProductList(widget.productLists),
       ],
     );
   }
 }
 
-class HomePageProductList extends StatelessWidget {
-  const HomePageProductList({Key? key}) : super(key: key);
+class HomePageProductList extends StatefulWidget {
+  final List<ProductList> productLists;
+  HomePageProductList(this.productLists, {Key? key}) : super(key: key);
 
+  @override
+  State<HomePageProductList> createState() => _HomePageProductListState();
+}
+
+class _HomePageProductListState extends State<HomePageProductList> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     const double minScreenWidth = 800.0; // 設定最小寬度值
 
     if (screenWidth < minScreenWidth) {
-      return VerticalCategories();
+      return VerticalCategories(widget.productLists);
     } else {
-      return HorizontalCategories();
+      return HorizontalCategories(widget.productLists);
     }
   }
 }

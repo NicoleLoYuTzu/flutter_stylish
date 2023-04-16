@@ -35,44 +35,46 @@ class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
 }
-
 class _MyAppState extends State<MyApp> {
-  List<ProductList> _productLists = [];
+  late Future<List<ProductList>> _futureAllProductLists;
+  late Future<List<ProductList>> _futureHotProductLists;
+
 
   @override
   void initState() {
     super.initState();
-    _fetchHotData();
-  }
-
-  Future<void> _fetchHotData() async {
-    try {
-      final products = await fetchHotProductList();
-      setState(() {
-        _productLists = products;
-      });
-
-    } catch (e) {
-      // handle error
-    }
+    // _futureAllProductLists = fetchProductList("All");
+    _futureAllProductLists = fetchProductList("All");
   }
 
   @override
   Widget build(BuildContext context) {
-    print('_productLists length: ${_productLists.length}');
-
-
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
           title: const StylishAppBar(),
           backgroundColor: Colors.grey[200],
         ),
-        body: HomePage(_productLists),
+        body: FutureBuilder<List<ProductList>>(
+          future: _futureAllProductLists,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              print("Error=> ${snapshot.error}");
+              return Center(child: Text('Error: ${snapshot.error}'));
+
+            } else {
+              List<ProductList>? productLists = snapshot.data;
+              return HomePage(productLists!);
+            }
+          },
+        ),
       ),
     );
   }
 }
+
 
 
 class StylishAppBar extends StatelessWidget {

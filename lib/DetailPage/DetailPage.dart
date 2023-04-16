@@ -1,9 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_stylish/model/product.dart';
 
 import '../main.dart';
 
-class DetailPage extends StatelessWidget {
+class DetailPage extends StatefulWidget {
+
+  final ProductList productList;
+
+  DetailPage(this.productList, {Key? key}) : super(key: key);
+
+  @override
+  State<DetailPage> createState() => _DetailPageState();
+}
+
+class _DetailPageState extends State<DetailPage> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -28,18 +39,19 @@ class DetailPage extends StatelessWidget {
                       children: [
                         Container(
                           padding: EdgeInsets.all(38),
-                          child: const ImageWidget(
-                            image: AssetImage('images/dog.png'),
-                            height: 350,
+                          child: Image(
+                            image: NetworkImage(widget.productList.images[0]),
+                            fit: BoxFit.cover,
                           ),
                         ),
-                        const Padding(
+                        Padding(
                           padding: EdgeInsets.all(16.0),
                           child: TextWithLine(
-                            topText: 'UNIQLO 特級輕羽絨',
-                            midText: '2023032101',
-                            botText: 'NT\$ 323',
+                            topText: widget.productList.title,
+                            midText: widget.productList.id.toString(),
+                            botText: 'NT\$${widget.productList.price}',
                             lineText: '---',
+                            productList: widget.productList,
                           ),
                         ),
                       ],
@@ -50,20 +62,21 @@ class DetailPage extends StatelessWidget {
                         Expanded(
                           child: Container(
                             padding: EdgeInsets.only(left: 38),
-                            child: const ImageWidget(
-                              image: AssetImage('images/dog.png'),
-                              height: 350,
+                            child: Image(
+                              image: NetworkImage(widget.productList.images[0]),
+                              fit: BoxFit.cover,
                             ),
                           ),
                         ),
-                        const Expanded(
+                        Expanded(
                           child: Padding(
                             padding: EdgeInsets.all(16.0),
                             child: TextWithLine(
-                              topText: 'UNIQLO 特級輕羽絨',
-                              midText: '2023032101',
-                              botText: 'NT\$ 323',
+                              topText: widget.productList.title,
+                              midText: widget.productList.id.toString(),
+                              botText: 'NT\$${widget.productList.price}',
                               lineText: '---',
+                              productList: widget.productList,
                             ),
                           ),
                         ),
@@ -171,34 +184,43 @@ class ImageWidget extends StatelessWidget {
   }
 }
 
-class TextWithLine extends StatelessWidget {
+class TextWithLine extends StatefulWidget {
   final String lineText;
   final String topText;
   final String midText;
   final String botText;
+  final ProductList productList;
 
   const TextWithLine({
     Key? key,
     required this.lineText,
     required this.topText,
     required this.midText,
-    required this.botText,
+    required this.botText, required this.productList,
   }) : super(key: key);
+
+  @override
+  State<TextWithLine> createState() => _TextWithLineState();
+}
+
+class _TextWithLineState extends State<TextWithLine> {
+
+  int selectedColorIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(
-        topText,
+        widget.topText,
         style: const TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 18,
         ),
       ),
-      Text(midText),
+      Text(widget.midText),
       const SizedBox(height: 8),
       Text(
-        botText,
+        widget.botText,
         style: const TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 18,
@@ -219,7 +241,7 @@ class TextWithLine extends StatelessWidget {
           alignment: Alignment.bottomLeft,
           child: Padding(
             padding: const EdgeInsets.only(left: 8),
-            child: Text(lineText),
+            child: Text(widget.lineText),
           ),
         ),
       ),
@@ -230,20 +252,34 @@ class TextWithLine extends StatelessWidget {
           const Text('｜'),
           const SizedBox(width: 8),
           Row(
-            children: List.generate(5, (index) {
-              final color = index.isEven ? Colors.blue : Colors.red;
-              return Row(
-                children: [
-                  Container(
-                    width: 20,
-                    height: 20,
+            children: List.generate(widget.productList.colors.length, (index) {
+              final color = hexToColor(widget.productList.colors[index].code);
+              return GestureDetector(
+                onTap: () {
+                  setState(() {
+                    selectedColorIndex = index;
+                  });
+                },
+                child: Container(
+                  width: 20,
+                  height: 20,
+                  decoration: BoxDecoration(
                     color: color,
+                    border: Border.all(
+                      color: selectedColorIndex == index ? Colors.black : Colors.transparent,
+                      width: 1,
+                    ),
                   ),
-                  const SizedBox(width: 8),
-                ],
+                ),
               );
-            }).toList(),
+            }).map((colorWidget) => Row(
+              children: [
+                colorWidget,
+                const SizedBox(width: 8),
+              ],
+            )).toList(),
           ),
+
         ],
       ),
       SizedBox(height: 8),
@@ -257,7 +293,7 @@ class TextWithLine extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: ButtonList(
-              buttonTitles: ['S', 'M', 'L'],
+              buttonTitles: widget.productList.sizes,
               onTap: (index) {
                 // 根據尺寸值執行相應的處理
               },
@@ -276,9 +312,10 @@ class TextWithLine extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: NumberWidget(
-              number: 3,
+              number: 1,
               onIncrement: (int) {},
               onDecrement: (int) {},
+              productList: widget.productList,
             ),
           ),
         ],
@@ -344,17 +381,26 @@ class TextWithLine extends StatelessWidget {
       ]),
     ]);
   }
+
+  // Color hexToColor(String code) {
+  //   return Color(int.parse(code.substring(0, 2) + 'FF' + code.substring(2), radix: 16));
+  // }
+  Color hexToColor(String code) {
+    final String hex = code.replaceAll("#", "");
+    return Color(int.parse("FF$hex", radix: 16));
+  }
 }
 
 class NumberWidget extends StatefulWidget {
-  const NumberWidget(
+  NumberWidget(
       {required this.number,
       required this.onIncrement,
-      required this.onDecrement});
+      required this.onDecrement, required this.productList});
 
   final int number;
   final void Function(int) onIncrement;
   final void Function(int) onDecrement;
+  final ProductList productList;
 
   @override
   _NumberWidgetState createState() => _NumberWidgetState();
@@ -371,7 +417,7 @@ class _NumberWidgetState extends State<NumberWidget> {
 
   void _incrementNumber() {
     setState(() {
-      if (_number < 10) {
+      if (_number <10) {
         _number++;
         widget.onIncrement(_number);
       }
@@ -386,6 +432,8 @@ class _NumberWidgetState extends State<NumberWidget> {
       }
     });
   }
+
+
 
   @override
   Widget build(BuildContext context) {

@@ -5,31 +5,30 @@ import 'package:flutter_stylish/HomePage/CardStyle.dart';
 import '../DetailPage/DetailPage.dart';
 import '../model/product.dart';
 
-class HorizontalCategories extends StatelessWidget {
-  HorizontalCategories({Key? key}) : super(key: key);
+class HorizontalCategories extends StatefulWidget {
+  final List<ProductList> productLists;
+  HorizontalCategories(this.productLists, {Key? key}) : super(key: key);
 
+  @override
+  State<HorizontalCategories> createState() => _HorizontalCategoriesState();
+}
+
+class _HorizontalCategoriesState extends State<HorizontalCategories> {
   @override
   Widget build(BuildContext context) {
     return Flexible(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _buildCategoryItem('女裝'),
-          _buildCategoryItem('男裝'),
-          _buildCategoryItem('配件'),
+          _buildCategoryItem('女裝', 'women'),
+          _buildCategoryItem('男裝', 'men'),
+          _buildCategoryItem('配件', 'accessories'),
         ],
       ),
     );
   }
 
-  final List<ProductList> listItems = List<ProductList>.generate(15, (index) {
-    return ProductList(
-        productStyle: '女裝',
-        productName: 'UNIQLO 特級輕羽絨',
-        price: 323);
-  });
-
-  Widget _buildCategoryItem(String category) {
+  Widget _buildCategoryItem(String category, String categoryValue) {
     return Flexible(
       child: Column(
         children: [
@@ -45,16 +44,23 @@ class HorizontalCategories extends StatelessWidget {
                 parent: BouncingScrollPhysics(),
               ),
               shrinkWrap: true,
-              itemCount: listItems.length,
+              itemCount: widget.productLists
+                  .where((product) => product.category == categoryValue)
+                  .length,
               itemBuilder: (BuildContext context, int index) {
+                final product = widget.productLists
+                    .where((product) => product.category == categoryValue)
+                    .elementAt(index);
                 return GestureDetector(
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => DetailPage()),
+                      MaterialPageRoute(
+                        builder: (context) => DetailPage(product),
+                      ),
                     );
                   },
-                  child: CardStyle(item: listItems[index]),
+                  child: CardStyle(product),
                 );
               },
             ),
@@ -64,5 +70,6 @@ class HorizontalCategories extends StatelessWidget {
     );
   }
 }
+
 
 
