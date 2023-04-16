@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_stylish/HomePage/VerticalCategories.dart';
 
+import 'DetailPage/TextWithLineBloc.dart';
 import 'HomePage/HomePage.dart';
 import 'HomePage/HorizontalCategories.dart';
 import 'Network/network.dart';
 import 'model/product.dart';
-
 
 void main() {
   runApp(const MyApp());
@@ -35,22 +36,25 @@ class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
 }
+
 class _MyAppState extends State<MyApp> {
   late Future<List<ProductList>> _futureAllProductLists;
   late Future<List<ProductList>> _futureHotProductLists;
-
+  late TextWithLineBloc _textWithLineBloc;
 
   @override
   void initState() {
     super.initState();
     // _futureAllProductLists = fetchProductList("All");
-    _futureAllProductLists = fetchProductList("All") as Future<List<ProductList>>;
+    _futureAllProductLists = fetchProductList("All");
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
+        home: BlocProvider<TextWithLineBloc>(
+      create: (context) => TextWithLineBloc(_futureAllProductLists),
+      child: Scaffold(
         appBar: AppBar(
           title: const StylishAppBar(),
           backgroundColor: Colors.grey[200],
@@ -63,7 +67,6 @@ class _MyAppState extends State<MyApp> {
             } else if (snapshot.hasError) {
               print("Error=> ${snapshot.error}");
               return Center(child: Text('Error: ${snapshot.error}'));
-
             } else {
               List<ProductList>? productLists = snapshot.data;
               return HomePage(productLists!);
@@ -71,11 +74,9 @@ class _MyAppState extends State<MyApp> {
           },
         ),
       ),
-    );
+    ));
   }
 }
-
-
 
 class StylishAppBar extends StatelessWidget {
   const StylishAppBar({

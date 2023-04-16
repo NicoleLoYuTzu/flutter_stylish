@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_stylish/model/product.dart';
 
 import '../main.dart';
+import 'TextWithLineBloc.dart';
 
 class DetailPage extends StatefulWidget {
   final ProductList productList;
@@ -253,25 +255,29 @@ class _TextWithLineState extends State<TextWithLine> {
             children: List.generate(widget.productList.colors.length, (index) {
               final color = hexToColor(widget.productList.colors[index].code);
               return GestureDetector(
-                onTap: () {
-                  setState(() {
-                    selectedColorIndex = index;
-                  });
-                },
-                child: Container(
-                  width: 20,
-                  height: 20,
-                  decoration: BoxDecoration(
-                    color: color,
-                    border: Border.all(
-                      color: selectedColorIndex == index
-                          ? Colors.black
-                          : Colors.transparent,
-                      width: 1,
+                    onTap: () {
+                      final bloc = BlocProvider.of<TextWithLineBloc>(context);
+                      final color = widget.productList.colors[index].name;
+                      final size = widget.productList.sizes[0];
+                      bloc.add(ColorSelected(widget.productList.id as String,color,size));
+                      setState(() {
+                        selectedColorIndex = index;
+                      });
+                    },
+                    child: Container(
+                      width: 20,
+                      height: 20,
+                      decoration: BoxDecoration(
+                        color: color,
+                        border: Border.all(
+                          color: selectedColorIndex == index
+                              ? Colors.black
+                              : Colors.transparent,
+                          width: 1,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              );
+                  );
             })
                 .map((colorWidget) => Row(
                       children: [
@@ -296,7 +302,13 @@ class _TextWithLineState extends State<TextWithLine> {
             child: ButtonList(
               buttonTitles: widget.productList.sizes,
               onTap: (index) {
-                // 根據尺寸值執行相應的處理
+                final bloc = BlocProvider.of<TextWithLineBloc>(context);
+                final color = widget.productList.colors[index].name;
+                final size = widget.productList.sizes[index];
+                bloc.add(SizeSelected(widget.productList.id as String,color,size));
+                setState(() {
+                  selectedColorIndex = index;
+                });
               },
             ),
           ),
@@ -418,13 +430,17 @@ class _NumberWidgetState extends State<NumberWidget> {
   }
 
   void _incrementNumber() {
+    final textWithLineBloc = BlocProvider.of<TextWithLineBloc>(context);
+    final maxQuantity = textWithLineBloc.getMaxQuantity();
     setState(() {
-      if (_number < 10) {
+      if (_number < maxQuantity) {
         _number++;
         widget.onIncrement(_number);
       }
     });
   }
+
+
 
   void _decrementNumber() {
     setState(() {
