@@ -5,7 +5,6 @@ import 'package:flutter_stylish/model/product.dart';
 import '../main.dart';
 
 class DetailPage extends StatefulWidget {
-
   final ProductList productList;
 
   DetailPage(this.productList, {Key? key}) : super(key: key);
@@ -144,9 +143,8 @@ class _DetailPageState extends State<DetailPage> {
                             child: Container(
                               padding: const EdgeInsets.all(38),
                               child: Image(
-                                image: AssetImage(
-                                    'images/detailpage${index + 1}.png'),
-                                height: 230,
+                                image: NetworkImage(
+                                    widget.productList.images[index]),
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -196,7 +194,8 @@ class TextWithLine extends StatefulWidget {
     required this.lineText,
     required this.topText,
     required this.midText,
-    required this.botText, required this.productList,
+    required this.botText,
+    required this.productList,
   }) : super(key: key);
 
   @override
@@ -204,7 +203,6 @@ class TextWithLine extends StatefulWidget {
 }
 
 class _TextWithLineState extends State<TextWithLine> {
-
   int selectedColorIndex = 0;
 
   @override
@@ -266,20 +264,23 @@ class _TextWithLineState extends State<TextWithLine> {
                   decoration: BoxDecoration(
                     color: color,
                     border: Border.all(
-                      color: selectedColorIndex == index ? Colors.black : Colors.transparent,
+                      color: selectedColorIndex == index
+                          ? Colors.black
+                          : Colors.transparent,
                       width: 1,
                     ),
                   ),
                 ),
               );
-            }).map((colorWidget) => Row(
-              children: [
-                colorWidget,
-                const SizedBox(width: 8),
-              ],
-            )).toList(),
+            })
+                .map((colorWidget) => Row(
+                      children: [
+                        colorWidget,
+                        const SizedBox(width: 8),
+                      ],
+                    ))
+                .toList(),
           ),
-
         ],
       ),
       SizedBox(height: 8),
@@ -395,7 +396,8 @@ class NumberWidget extends StatefulWidget {
   NumberWidget(
       {required this.number,
       required this.onIncrement,
-      required this.onDecrement, required this.productList});
+      required this.onDecrement,
+      required this.productList});
 
   final int number;
   final void Function(int) onIncrement;
@@ -417,7 +419,7 @@ class _NumberWidgetState extends State<NumberWidget> {
 
   void _incrementNumber() {
     setState(() {
-      if (_number <10) {
+      if (_number < 10) {
         _number++;
         widget.onIncrement(_number);
       }
@@ -432,8 +434,6 @@ class _NumberWidgetState extends State<NumberWidget> {
       }
     });
   }
-
-
 
   @override
   Widget build(BuildContext context) {

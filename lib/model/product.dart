@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 // class Product {
 //   final String title;
@@ -19,6 +20,13 @@ class ProductColor {
   final String name;
 
   ProductColor({required this.code, required this.name});
+
+  factory ProductColor.fromJson(Map<String, dynamic> json) {
+    return ProductColor(
+      code: json['code'],
+      name: json['name'],
+    );
+  }
 }
 
 class Variant {
@@ -77,6 +85,39 @@ class ProductList {
     this.mainImage = '',
     this.images = const [],
   });
+
+  factory ProductList.fromJson(Map<String, dynamic> json) {
+    List<ProductColor>? colors = [];
+    if (json['colors'] != null) {
+      colors = List.from(json['colors']).map((colorJson) =>
+          ProductColor.fromJson(colorJson)).cast<ProductColor>().toList();
+    }
+
+    List<Variant> variants = [];
+    if (json['variants'] != null) {
+      variants = List.from(json['variants']).map((variantJson) =>
+          Variant.fromJson(variantJson)).toList();
+    }
+
+    return ProductList(
+      id: json['id'] ?? 0,
+      category: json['category'] ?? '',
+      title: json['title'] ?? '',
+      description: json['description'] ?? '',
+      price: json['price'] ?? 0,
+      texture: json['texture'] ?? '',
+      wash: json['wash'] ?? '',
+      place: json['place'] ?? '',
+      note: json['note'] ?? '',
+      story: json['story'] ?? '',
+      colors: colors,
+      sizes: List.from(json['sizes'] ?? []),
+      variants: variants,
+      mainImage: json['main_image'] ?? '',
+      images: List.from(json['images'] ?? []),
+    );
+  }
+
 }
 
 
@@ -86,25 +127,31 @@ class ImageList {
   ImageList({required this.image});
 }
 
-// class ProductListHots {
-//   final String title;
-//   final ProductList products;
-//
-//   ProductListHots({
-//     this.title = 'Default Title',
-//     this.products = ProductList(),
-//   });
-// }
 
 class ProductListHots {
-  late final String title;
-  late final List<ProductList> products;
+  final String title;
+  final List<dynamic> products;
 
   ProductListHots({
-    this.title = 'Default Title',
-    List<ProductList>? products,
-  }) {
-    this.products = products ?? [];
+    required this.title,
+    required this.products,
+  });
+
+  factory ProductListHots.fromJson(Map<String, dynamic> json) {
+    return ProductListHots(
+      title: json['title'],
+      products: (json['products'] as List<dynamic>)
+          .map((productJson) => ProductList.fromJson(productJson))
+          .toList(),
+    );
   }
+
+
+
+  Map<String, dynamic> toJson() => {
+    'title': title,
+    'products': products.map((product) => product.toJson()).toList(),
+  };
 }
+
 

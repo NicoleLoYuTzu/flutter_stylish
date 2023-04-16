@@ -4,7 +4,7 @@ import 'dart:convert';
 
 import '../model/product.dart';
 
-Future<List<ProductList>> fetchProductList(category) async {
+Future<List<dynamic>> fetchProductList(category) async {
   const String hostName = 'api.appworks-school.tw';
   const String apiVersion = '1.0';
   String askForRequest;
@@ -23,7 +23,7 @@ Future<List<ProductList>> fetchProductList(category) async {
   print('Uri : ${Uri.https(hostName, '/api/$apiVersion$askForRequest')}');
   print('response.statusCode => ${response.statusCode}');
   if (response.statusCode == 200) {
-    List<ProductList> productLists = [];
+    List<dynamic> productLists = [];
     ProductListHots productListsHot = ProductListHots(title: '', products: []);
 
 
@@ -117,10 +117,8 @@ Future<List<ProductList>> fetchProductList(category) async {
 
       for (var item in data) {
         productListsHot = ProductListHots(
-          title: item['title'],
-          products: item['products'],
+          title: item['title'],products: item['products']
         );
-        List<ProductList>? hotProducts = [];
 
         List<Variant> variants = [];
         for (var variant in item['variants']) {
@@ -170,16 +168,15 @@ Future<List<ProductList>> fetchProductList(category) async {
           mainImage: item['main_image'],
           images: images,
         );
-        hotProducts.add(productList);
-        productListsHot.title = productListsHot.title;
-        productListsHot.products = hotProducts;
+        productListsHot.products.add(productList);
+        productLists = productListsHot.products;
       }
 
 
     }
 
     if (category == "Hot") {
-      return productListsHot.products;
+      return productLists;
     } else if (category == "All") {
       return productLists;
     } else {

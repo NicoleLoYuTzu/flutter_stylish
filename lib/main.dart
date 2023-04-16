@@ -44,7 +44,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     // _futureAllProductLists = fetchProductList("All");
-    _futureAllProductLists = fetchProductList("All");
+    _futureAllProductLists = fetchProductList("All") as Future<List<ProductList>>;
   }
 
   @override
