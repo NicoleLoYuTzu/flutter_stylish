@@ -1,25 +1,32 @@
 import 'package:flutter/material.dart';
+import '../../data/HomeItem.dart';
 import '../DetailPage/DetailPage.dart';
-import '../model/product.dart';
 
+//沒用到
 class CardStyle extends StatefulWidget {
-  final ProductList productList;
-
-  CardStyle(this.productList, {Key? key}) : super(key: key);
+  final HomeProduct? product;
+  const CardStyle({
+    required this.product,
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<CardStyle> createState() => _CardStyleState();
 }
 
 class _CardStyleState extends State<CardStyle> {
+
   @override
   Widget build(BuildContext context) {
+
+    var image = widget.product?.image ?? "";
+    var id = widget.product?.id ?? "";
     return GestureDetector(
         onTap: () {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => DetailPage(widget.productList),
+              builder: (context) => DetailPage(productId: id,),
             ),
           );
         },
@@ -44,7 +51,7 @@ class _CardStyleState extends State<CardStyle> {
                       bottomLeft: Radius.circular(8),
                     ),
                     child: Image(
-                      image: NetworkImage(widget.productList.images[0]),
+                      image: NetworkImage(image),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -56,13 +63,13 @@ class _CardStyleState extends State<CardStyle> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.productList.title,
+                      widget.product?.name?? "",
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
-                      'NT\$ ${widget.productList.price}',
+                      'NT\$ ${widget.product?.price}',
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                       ),

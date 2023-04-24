@@ -1,34 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_stylish/HomePage/VerticalCategories.dart';
-
-import 'DetailPage/TextWithLineBloc.dart';
-import 'HomePage/HomePage.dart';
-import 'HomePage/HorizontalCategories.dart';
-import 'Network/network.dart';
-import 'model/product.dart';
+import 'package:flutter_stylish/repo/stylish_repository.dart';
+import 'package:flutter_stylish/util/my_custom_scroll_behavior.dart';
+import 'package:flutter_stylish/view/HomePage/HomePage.dart';
+import 'bloc/detail/product_content_bloc.dart';
+import 'bloc/home/home_bloc.dart';
 
 void main() {
   runApp(const MyApp());
 }
-//
-// class MyApp extends StatelessWidget {
-//   const MyApp({Key? key}) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       home: Scaffold(
-//         appBar: AppBar(
-//           title: const StylishAppBar(),
-//           backgroundColor: Colors.grey[200],
-//         ),
-//         body: const HomePage(),
-//
-//       ),
-//     );
-//   }
-// }
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -38,45 +18,33 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late Future<List<ProductList>> _futureAllProductLists;
-  late Future<List<ProductList>> _futureHotProductLists;
-  late TextWithLineBloc _textWithLineBloc;
-
-  @override
-  void initState() {
-    super.initState();
-    // _futureAllProductLists = fetchProductList("All");
-    _futureAllProductLists = fetchProductList("All");
-  }
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        home: BlocProvider<TextWithLineBloc>(
-      create: (context) => TextWithLineBloc(_futureAllProductLists),
-      child: Scaffold(
-        appBar: AppBar(
-          title: const StylishAppBar(),
-          backgroundColor: Colors.grey[200],
-        ),
-        body: FutureBuilder<List<ProductList>>(
-          future: _futureAllProductLists,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              print("Error=> ${snapshot.error}");
-              return Center(child: Text('Error: ${snapshot.error}'));
-            } else {
-              List<ProductList>? productLists = snapshot.data;
-              return HomePage(productLists!);
-            }
-          },
-        ),
-      ),
-    ));
+    StylishRepository repository = StylishRepository();
+
+    return MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (_) => HomeBloc(repository)..add(HomeLoadEvent()),
+          ),
+          BlocProvider(
+            create: (_) => ProductContentBloc(repository),
+          ),
+        ],
+        child:MaterialApp(
+          scrollBehavior: MyCustomScrollBehavior(),
+          home: Scaffold(
+            appBar: AppBar(
+              title: const StylishAppBar(),
+              backgroundColor: Colors.grey[200],
+            ),
+            body: HomePage(),
+          ),
+        ));
   }
 }
+
+
 
 class StylishAppBar extends StatelessWidget {
   const StylishAppBar({
