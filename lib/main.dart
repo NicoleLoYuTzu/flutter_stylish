@@ -48,8 +48,8 @@ class _MyAppState extends State<MyApp> {
 
 class StylishAppBar extends StatelessWidget {
   const StylishAppBar({
-    super.key,
-  });
+    Key? key, // Add Key? before key to declare it as a named parameter with a null safety type.
+  }) : super(key: key); // Pass key to the super constructor.
 
   @override
   Widget build(BuildContext context) {

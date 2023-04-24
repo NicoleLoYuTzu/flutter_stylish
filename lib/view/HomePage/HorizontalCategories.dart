@@ -10,8 +10,7 @@ class HorizontalCategories extends StatefulWidget {
   final List<HomeProduct> accessories;
 
   const HorizontalCategories(
-      this.womenClothes, this.menClothes, this.accessories,
-      {super.key});
+      this.womenClothes, this.menClothes, this.accessories);
 
   @override
   State<HorizontalCategories> createState() => _HorizontalCategoriesState();

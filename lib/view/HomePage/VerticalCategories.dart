@@ -11,7 +11,7 @@ class VerticalCategories extends StatefulWidget {
   final List<HomeProduct> menClothes;
   final List<HomeProduct> accessories;
 
-  VerticalCategories(this.womenClothes, this.menClothes, this.accessories,{super.key});
+  VerticalCategories(this.womenClothes, this.menClothes, this.accessories);
 
   @override
   _VerticalCategoriesState createState() => _VerticalCategoriesState();
@@ -85,7 +85,7 @@ class CategoryTitleView extends StatelessWidget {
   final Function() onTap;
 
   const CategoryTitleView(
-      {required this.title, required this.onTap, super.key});
+      {required this.title, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +114,7 @@ void goProductContent(
 class CategoryCardView extends StatelessWidget {
   late HomeProduct product;
 
-  CategoryCardView(this.product, {super.key});
+  CategoryCardView(this.product);
 
   @override
   Widget build(BuildContext context) {

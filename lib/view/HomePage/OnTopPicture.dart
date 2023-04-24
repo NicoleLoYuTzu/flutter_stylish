@@ -57,7 +57,8 @@ class _OnTopPictureState extends State<OnTopPicture> {
                     context,
                     MaterialPageRoute(
                       builder: (context) =>
-                          DetailPage(productId: hots[index].id,),
+                      hots != null && index < hots.length ?
+                      DetailPage(productId: hots[index].id,) : Container(),
                     ),
                   );
                 },
