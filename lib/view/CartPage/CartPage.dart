@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 // import 'package:flutter_tappay/flutter_tappay.dart';
 
 
@@ -9,143 +10,71 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
-  // FlutterTappay? _tappay;
-  TextEditingController? _cardNumberController;
-  TextEditingController? _cardMonthController;
-  TextEditingController? _cardYearController;
-  TextEditingController? _cardCCVController;
 
-  String _token = '';
+  String _tappayMessage = 'init';
+  static const platform = MethodChannel('test_tappay');
 
-  @override
-  void initState() {
-    super.initState();
-    // _tappay?.init(
-    //   appKey: 'app_whdEWBH8e8Lzy4N6BysVRRMILYORF6UxXbiOFsICkz0J9j1C0JUlCHv1tVJC',
-    //   appId: 11334,
-    //   serverType: FlutterTappayServerType.Sandbox,
-    // );
-  }
+  Future<void> _inputCreditCard() async {
+    String message;
 
-  @override
-  void dispose() {
-    _cardNumberController?.dispose();
-    _cardMonthController?.dispose();
-    _cardYearController?.dispose();
-    _cardCCVController?.dispose();
-    super.dispose();
+    try {
+      final String result = await platform.invokeMethod('tappay');
+      message = result;
+    } on PlatformException catch (e) {
+      message = e.message ?? '';
+    }
+
+    setState(() {
+      _tappayMessage = message;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    int _counter = 0;
+    // This method is rerun every time setState is called, for instance as done
+    // by the _incrementCounter method above.
+    //
+    // The Flutter framework has been optimized to make rerunning build methods
+    // fast, so that you can just rebuild anything that needs updating rather
+    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tappay'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: Center(
+        // Center is a layout widget. It takes a single child and positions it
+        // in the middle of the parent.
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+          // Column is also a layout widget. It takes a list of children and
+          // arranges them vertically. By default, it sizes itself to fit its
+          // children horizontally, and tries to be as tall as its parent.
+          //
+          // Column has various properties to control how it sizes itself and
+          // how it positions its children. Here we use mainAxisAlignment to
+          // center the children vertically; the main axis here is the vertical
+          // axis because Columns are vertical (the cross axis would be
+          // horizontal).
+          //
+          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
+          // action in the IDE, or press "p" in the console), to see the
+          // wireframe for each widget.
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
             Text(
-              '信用卡號',
-              style: TextStyle(fontSize: 16),
+              _tappayMessage,
             ),
-            SizedBox(height: 8),
-            TextField(
-              controller: _cardNumberController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: '輸入信用卡號',
-              ),
-            ),
-            SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '到期日',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      SizedBox(height: 8),
-                      TextField(
-                        controller: _cardMonthController,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          hintText: 'MM',
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(width: 16),
-                Expanded(
-                  flex: 2,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      SizedBox(height: 8),
-                      TextField(
-                        controller: _cardYearController,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          hintText: 'YY',
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(width: 16),
-                Expanded(
-                  flex: 3,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '安全碼',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      SizedBox(height: 8),
-                      TextField(
-                        controller: _cardCCVController,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          hintText: 'CCV',
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                String? cardNumber = _cardNumberController?.text;
-                String? cardMonth = _cardMonthController?.text;
-                String? cardYear = _cardYearController?.text;
-                String? cardCCV = _cardCCVController?.text;
-
-                // TODO: Use Tappay SDK to process payment
-              },
-              child: Text('付款'),
+            Text(
+              '$_counter',
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _inputCreditCard,
+        tooltip: 'Increment',
+        child: const Icon(Icons.add),
+      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
