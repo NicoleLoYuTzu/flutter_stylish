@@ -1,9 +1,12 @@
 package com.example.flutter_stylish
 
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.flutter.Log
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 
 
@@ -22,6 +25,7 @@ class MainActivity: FlutterActivity() {
 //                    result.notImplemented()
 //                }
 //            }
+
 //    }
 
     private val CHANNEL = "test_tappay"
@@ -34,6 +38,7 @@ class MainActivity: FlutterActivity() {
         setChannelByCustomDialog(flutterEngine)
 
     }
+
 
     fun setChannelByCustomDialog(flutterEngine: FlutterEngine) {
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
@@ -57,7 +62,21 @@ class MainActivity: FlutterActivity() {
 
                     dialog.show()
 
-                } else {
+                } else if(call.method == "googleMap"){
+                    Log.d(TAG, "googleMap i got u ^.<")
+
+                    if (call.method == "googleMap") {
+                        val latitude = call.argument<Double>("latitude")!!
+                        val longitude = call.argument<Double>("longitude")!!
+                        GoogleMapsUtils.openLocationInMaps(this, latitude, longitude)
+
+                        result.success("Received location data from Flutter")
+                    } else {
+                        result.notImplemented()
+                    }
+
+
+                }else {
                     Log.d(TAG, "u know nothing ${call.method}")
 
                     result.error("404", "404", null)
